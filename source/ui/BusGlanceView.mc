@@ -3,66 +3,56 @@ import Toybox.Lang;
 import Toybox.Time;
 import Toybox.WatchUi;
 
-// Glance: first favorite + next departure. Shows cached data immediately, then live.
+// Glance: up to two favorites (active-now first, then by rank). Cached data first, then live, one fetch at a time.
 (:glance)
 class BusGlanceView extends WatchUi.GlanceView {
-    hidden var _fav = null;
-    hidden var _deps = null;
-    hidden var _error = null;
-    hidden var _code = 0;
+    const MAX_ROWS = 2;
+    const FETCH = 2;
+
+    hidden var _rows as Array = [];
+    hidden var _fetcher = null;
 
     function initialize() {
         GlanceView.initialize();
     }
 
     function onShow() as Void {
-        _fav = FavoritesStore.get(0);
-        _deps = null;
-        _error = null;
-        _code = 0;
-        if (_fav == null) {
-            return;
+        var order = FavoritesStore.displayOrder(TimeUtil.currentHour());
+        _rows = [];
+        for (var i = 0; i < order.size() && i < MAX_ROWS; i++) {
+            _rows.add(new FavoriteRow(FavoritesStore.get(order[i]) as Dictionary));
         }
-        var cached = DepartureCache.get(_fav);
-        if (cached != null) {
-            _deps = cached["d"];
-        }
-        new DepartureService(_fav, method(:onResult)).send(2);
+        _fetcher = new RowFetcher(_rows, FETCH, method(:onRowsChanged));
+        _fetcher.start();
     }
 
-    function onResult(fav as Dictionary, deps as Array or Null, error as Number or Null, code as Number) as Void {
-        if (_fav == null || !Model.sameFavorite(fav, _fav)) {
-            return;
-        }
-        _error = error;
-        _code = code;
-        if (deps != null) {
-            _deps = deps;
-        }
+    function onRowsChanged() as Void {
         WatchUi.requestUpdate();
     }
 
     function onUpdate(dc as Graphics.Dc) as Void {
         var left = Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER;
+        var w = dc.getWidth();
         var h = dc.getHeight();
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        if (_fav == null) {
+        if (_rows.size() == 0) {
             dc.drawText(0, h / 2, Graphics.FONT_TINY, Fmt.str(Rez.Strings.AddFavorite), left);
             return;
         }
-        dc.drawText(0, h * 0.3, Graphics.FONT_TINY, _fav["label"] as String, left);
-        dc.drawText(0, h * 0.72, Graphics.FONT_XTINY, _fav["stopName"] + ": " + status(), left);
+        var now = Time.now().value();
+        var first = _rows[0] as FavoriteRow;
+        if (_rows.size() == 1) {
+            dc.drawText(0, h * 0.3, Graphics.FONT_TINY, first.fav["label"] as String, left);
+            drawFitted(dc, h * 0.72, (first.fav["stopName"] as String) + ": " + first.status(now), w);
+            return;
+        }
+        drawFitted(dc, h * 0.3, first.text(now), w);
+        drawFitted(dc, h * 0.72, (_rows[1] as FavoriteRow).text(now), w);
     }
 
-    hidden function status() as String {
-        var now = Time.now().value();
-        var next = ((_deps == null) ? [] : Model.upcoming(_deps, now, 1)) as Array;
-        if (next.size() > 0) {
-            return Fmt.minutes(TimeUtil.minutesUntil(next[0]["epoch"] as Number, now), next[0]["rt"] as Boolean);
-        }
-        if (_error != null) {
-            return ServiceError.message(_error, _code);
-        }
-        return Fmt.str(Rez.Strings.Loading);
+    hidden function drawFitted(dc as Graphics.Dc, y as Numeric, text as String, w as Number) as Void {
+        var font = Graphics.FONT_XTINY;
+        var fitted = Graphics.fitTextToArea(text, font, w, dc.getFontHeight(font), true);
+        dc.drawText(0, y, font, fitted, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 }
