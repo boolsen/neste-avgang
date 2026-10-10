@@ -7,11 +7,11 @@ function rowFav() as Dictionary {
 }
 
 (:test)
-function testFavoriteRowTitleAndLoading(logger as Logger) as Boolean {
+function testFavoriteRowInfoAndLoading(logger as Logger) as Boolean {
     Application.Storage.deleteValue(DepartureCache.key(rowFav()));
     var row = new FavoriteRow(rowFav());
-    return Check.eq(logger, "title", row.title(), "10 Gyldenprisveien")
-        && Check.eq(logger, "loading", row.text(1000), "10 Gyldenprisveien: Henter…");
+    return Check.eq(logger, "info", row.info(), "10 > Mulen  Gyldenprisveien")
+        && Check.eq(logger, "loading", row.status(1000), "Henter…");
 }
 
 (:test)

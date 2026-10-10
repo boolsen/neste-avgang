@@ -19,5 +19,5 @@ function testRowFetcherCancelledIgnoresResult(logger as Logger) as Boolean {
     fetcher.start();   // no-op, so no network
     fetcher.onResult(rowFav(), [Model.departure("10", "Mulen", 900, true)], null, 200);
     return Check.eq(logger, "no onChange", counter.n, 0)
-        && Check.eq(logger, "row untouched", row.text(1000), "10 Gyldenprisveien: Henter…");
+        && Check.eq(logger, "row untouched", row.status(1000), "Henter…");
 }

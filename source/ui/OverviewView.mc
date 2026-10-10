@@ -81,7 +81,7 @@ class OverviewView extends WatchUi.View {
         var now = Time.now().value();
         var font = Graphics.FONT_TINY;
         for (var i = 0; i < _rows.size(); i++) {
-            var text = Graphics.fitTextToArea((_rows[i] as FavoriteRow).text(now), font,
+            var text = Graphics.fitTextToArea((_rows[i] as FavoriteRow).status(now) + "  " + (_rows[i] as FavoriteRow).info(), font,
                 OverviewLayout.rowWidth(i, w, h), dc.getFontHeight(font), true);
             dc.drawText(w / 2, OverviewLayout.rowY(i, h), font, text, center);
         }

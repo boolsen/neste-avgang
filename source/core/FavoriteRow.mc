@@ -1,6 +1,6 @@
 import Toybox.Lang;
 
-// One favorite's one-line state for multi-row screens (glance, overview).
+// One favorite's row state for multi-row screens (glance, overview): time/status + info text.
 (:glance)
 class FavoriteRow {
     var fav as Dictionary;
@@ -24,8 +24,9 @@ class FavoriteRow {
         }
     }
 
-    function title() as String {
-        return (fav["lineCode"] as String) + " " + (fav["stopName"] as String);
+    // Text shown after the time: "<line> > <direction>  <stop>".
+    function info() as String {
+        return (fav["label"] as String) + "  " + (fav["stopName"] as String);
     }
 
     function status(now as Number) as String {
@@ -38,9 +39,5 @@ class FavoriteRow {
             return ServiceError.message(_error as Number, _code);
         }
         return Fmt.str(Rez.Strings.Loading);
-    }
-
-    function text(now as Number) as String {
-        return title() + ": " + status(now);
     }
 }

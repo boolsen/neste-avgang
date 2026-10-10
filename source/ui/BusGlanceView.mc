@@ -55,8 +55,8 @@ class BusGlanceView extends WatchUi.GlanceView {
             drawFitted(dc, h * 0.72, (first.fav["stopName"] as String) + ": " + first.status(now), w);
             return;
         }
-        drawFitted(dc, h * 0.3, first.text(now), w);
-        drawFitted(dc, h * 0.72, (_rows[1] as FavoriteRow).text(now), w);
+        drawFitted(dc, h * 0.3, first.status(now) + "  " + first.info(), w);
+        drawFitted(dc, h * 0.72, (_rows[1] as FavoriteRow).status(now) + "  " + (_rows[1] as FavoriteRow).info(), w);
     }
 
     hidden function drawFitted(dc as Graphics.Dc, y as Numeric, text as String, w as Number) as Void {
