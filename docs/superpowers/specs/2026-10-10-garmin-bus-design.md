@@ -10,7 +10,8 @@ Existing apps (e.g. Mobi) only let you save favorite *stops*. They list every li
 
 ## Scope
 
-- Target: Venu / Vivoactive family (touchscreen, glance support). Exact model is confirmed in Milestone 1 and used as the primary simulator target.
+- Targets: **Venu 4** (primary) and **Vivoactive 6** (secondary). Both have touchscreens and glances. Device IDs in `manifest.xml` are confirmed against the SDK in Milestone 1.
+- Language: Norwegian (bokmål) only for now, but all user-facing text lives in string resources so other languages can be added without code changes (see *Localization*).
 - Distribution: personal sideload. The Connect IQ Store is out of scope.
 - Watch-only. No proxy server.
 
@@ -76,6 +77,12 @@ Ordered list of `Favorite` dictionaries in `Application.Storage`.
 - Verified 2026-10-10: Gyldenprisveien (`NSR:StopPlace:29169`) has quays `NSR:Quay:50123` (lines 10 and 20 one way) and `NSR:Quay:50122` (line 10 → Mulen). This confirms that quay + line is the right favorite key and that destination text is not, since one line shows several destination texts in the same direction.
 - Time parsing: ISO-8601 with offset (e.g. `2026-10-10T10:00:46+02:00`) → epoch seconds; minutes until departure = `(epoch − now) / 60`, floored, `0` shown as `Nå`.
 
+## Localization
+
+- Every user-facing string is defined in `resources/strings/strings.xml` and read via `WatchUi.loadResource(Rez.Strings.X)`. No literal UI text in Monkey C code.
+- Norwegian is the default resource set. Adding a language = adding `resources-<lang>/strings/strings.xml` (e.g. `resources-eng`). Connect IQ then picks it automatically based on the watch's language setting.
+- Strings with values (e.g. `%1$ min`) use `Lang.format` placeholders so word order can differ per language.
+
 ## Error handling
 
 | Situation | Shown |
@@ -97,13 +104,23 @@ Cached departures whose time has already passed are dropped before display.
 ## Milestones
 
 1. **Toolchain**: install the Connect IQ SDK, VS Code Monkey C extension, and a developer key; confirm the watch model; run "hello" in the simulator and sideload it to the watch.
-2. **Hardcoded pipeline**: one hardcoded favorite (Gyldenprisveien quay + line) → live departures in app view and glance.
+2. **Hardcoded pipeline**: one hardcoded favorite, line 10 at Gyldenprisveien towards Mulen (`NSR:Quay:50122`, `SKY:Line:10`) → live departures in app view and glance.
 3. **Provider layer**: extract the Provider interface, common models, and EnturProvider; add fixture-based tests.
 4. **Favorites + Add flow**: GPS nearby → stop → line/direction → save; multiple favorites with swipe; delete/move to top.
 5. **Polish**: error states, caching, 30 s refresh, layout tuned for the target screen.
 
-Each milestone ends with a working build on the watch.
+Each milestone ends with a working build on the Venu 4, and it is also checked on the Vivoactive 6 simulator. The Vivoactive 6 watch is used for testing when it's available.
+
+## Planned later: return trip / stops beyond 500 m
+
+Today you have to be within 500 m of a stop to add it. A later feature removes that limit:
+- After saving a favorite, ask "Legg til returreise?".
+- If yes, list the stops that come after the chosen stop on that line (from the Entur journey pattern / `serviceJourney.quays`).
+- The user picks the destination stop. The app then saves that stop's quay **for the opposite direction** of the same line as the next favorite.
+- This needs two new provider methods (`buildStopsOnLineRequest` / `parseStopsOnLine`) and needs no UI changes elsewhere.
+
+This is not part of milestones 1–5.
 
 ## Out of scope (for now)
 
-Other countries, proxy server, watch face/complication, Connect IQ Store publishing, trip planning, ticketing.
+Other countries, return-trip feature (see above), languages other than Norwegian, proxy server, watch face/complication, Connect IQ Store publishing, trip planning, ticketing.
