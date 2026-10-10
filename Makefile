@@ -13,7 +13,7 @@ build:
 test:
 	mkdir -p bin
 	"$(BIN)/monkeyc" -f test.jungle -d $(DEVICE) -o bin/GarminBusTest.prg -y "$(KEY)" -t
-	"$(BIN)/monkeydo" bin/GarminBusTest.prg $(DEVICE) -t
+	"$(BIN)/monkeydo" bin/GarminBusTest.prg $(DEVICE) -t | tee bin/test-output.txt; grep -q '^PASSED (' bin/test-output.txt
 
 # Simulator must be running (make sim)
 run: build
