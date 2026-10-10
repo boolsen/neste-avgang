@@ -90,7 +90,7 @@ Ordered list of `Favorite` dictionaries in `Application.Storage`.
 | Phone not connected | `Ingen telefon` + cached departures with age |
 | HTTP / network error | `Feil (kode)` + cached departures with age |
 | No departures returned | `Ingen avganger` |
-| GPS timeout | `Fant ikke posisjon` + Retry |
+| GPS timeout | Use the watch's last known position; only if none: `Fant ikke posisjon` + Retry |
 | No favorites | Glance: `Legg til favoritt`; App: opens the Add flow |
 
 Cached departures whose time has already passed are dropped before display.

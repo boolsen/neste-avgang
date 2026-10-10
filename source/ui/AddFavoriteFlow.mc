@@ -56,7 +56,11 @@ class AddFavoriteFlow {
             onPositionTimeout();
             return;
         }
-        var deg = info.position.toDegrees();
+        searchNear(info.position as Position.Location);
+    }
+
+    hidden function searchNear(position as Position.Location) as Void {
+        var deg = position.toDegrees();
         showStatus(Fmt.str(Rez.Strings.Loading));
         Net.send(_provider.buildNearbyStopsRequest(deg[0], deg[1]), method(:onNearby));
     }
@@ -66,6 +70,12 @@ class AddFavoriteFlow {
             return;
         }
         Position.enableLocationEvents(Position.LOCATION_DISABLE, null);
+        // Falls back to the watch's last known fix (may be stale; the stop names/distances make that visible).
+        var last = Position.getInfo();
+        if (last.position != null && last.accuracy != Position.QUALITY_NOT_AVAILABLE) {
+            searchNear(last.position as Position.Location);
+            return;
+        }
         _status.setError(Fmt.str(Rez.Strings.NoPosition), method(:requestPosition));
     }
 
