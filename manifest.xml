@@ -2,6 +2,8 @@
 <iq:manifest version="3" xmlns:iq="http://www.garmin.com/xml/connectiq">
     <iq:application id="374e2b1f078949feadaf98a6f3f20da1" type="watch-app" name="@Strings.AppName" entry="GarminBusApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="5.0.0">
         <iq:products>
+            <iq:product id="venu3"/>
+            <iq:product id="venu3s"/>
             <iq:product id="venu441mm"/>
             <iq:product id="venu445mm"/>
             <iq:product id="vivoactive6"/>

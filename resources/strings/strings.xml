@@ -1,5 +1,5 @@
 <strings>
-    <string id="AppName" scope="glance">Buss</string>
+    <string id="AppName" scope="glance">Neste avgang</string>
     <string id="AddFavorite" scope="glance">Legg til favoritt</string>
     <string id="Now" scope="glance">Nå</string>
     <string id="MinutesFmt" scope="glance">$1$ min</string>

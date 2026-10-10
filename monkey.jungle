@@ -1,1 +1,6 @@
 project.manifest = manifest.xml
+venu3.resourcePath = resources;resources-venu3
+venu3s.resourcePath = resources;resources-venu3s
+venu441mm.resourcePath = resources;resources-venu441mm
+venu445mm.resourcePath = resources;resources-venu445mm
+vivoactive6.resourcePath = resources;resources-vivoactive6

@@ -3,7 +3,7 @@ BIN     = $(SDK)/bin
 DEVICE ?= venu445mm
 KEY    ?= $(HOME)/.garmin/developer_key.der
 
-.PHONY: build test run sim
+.PHONY: build test run sim icons export
 
 build:
 	mkdir -p bin
@@ -21,3 +21,16 @@ run: build
 
 sim:
 	"$(BIN)/connectiq" &
+
+icons:
+	python3 -I tools/make_icon.py 70 resources/drawables/launcher_icon.png
+	mkdir -p store
+	python3 -I tools/make_icon.py 500 store/icon-500.png
+	for d in venu3:70 venu3s:70 venu441mm:54 venu445mm:65 vivoactive6:54; do \
+		mkdir -p resources-$${d%%:*}/drawables; \
+		python3 -I tools/make_icon.py $${d##*:} resources-$${d%%:*}/drawables/launcher_icon.png; \
+	done
+
+export:
+	mkdir -p bin
+	"$(BIN)/monkeyc" -e -r -w -f monkey.jungle -o bin/NesteAvgang.iq -y "$(KEY)"
