@@ -11,13 +11,15 @@ function testFavoritesAddGetCount(logger as Logger) as Boolean {
     var i0 = FavoritesStore.add(favN(1));
     var i1 = FavoritesStore.add(favN(2));
     var dup = FavoritesStore.add(favN(1));
-    return Check.eq(logger, "i0", i0, 0)
+    var ok = Check.eq(logger, "i0", i0, 0)
         && Check.eq(logger, "i1", i1, 1)
         && Check.eq(logger, "dup", dup, 0)
         && Check.eq(logger, "count", FavoritesStore.count(), 2)
         && Check.eq(logger, "get1", FavoritesStore.get(1)["quayId"], "Q2")
         && Check.eq(logger, "oob", FavoritesStore.get(5), null)
         && Check.eq(logger, "neg", FavoritesStore.get(-1), null);
+    FavoritesStore.clear();
+    return ok;
 }
 
 (:test)
@@ -28,9 +30,11 @@ function testFavoritesRemove(logger as Logger) as Boolean {
     FavoritesStore.add(favN(3));
     FavoritesStore.remove(1);
     FavoritesStore.remove(9);
-    return Check.eq(logger, "count", FavoritesStore.count(), 2)
+    var ok = Check.eq(logger, "count", FavoritesStore.count(), 2)
         && Check.eq(logger, "0", FavoritesStore.get(0)["quayId"], "Q1")
         && Check.eq(logger, "1", FavoritesStore.get(1)["quayId"], "Q3");
+    FavoritesStore.clear();
+    return ok;
 }
 
 (:test)

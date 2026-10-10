@@ -39,11 +39,13 @@ function testServiceSuccessCaches(logger as Logger) as Boolean {
     var cap = new ResultCapture();
     new DepartureService(fav, cap.method(:onResult)).onResponse(200, Fixtures.departures());
     var cached = DepartureCache.get(fav);
-    return Check.eq(logger, "called", cap.called, true)
+    var ok = Check.eq(logger, "called", cap.called, true)
         && Check.eq(logger, "error", cap.error, null)
         && Check.eq(logger, "deps", cap.deps.size(), 3)
         && Check.eq(logger, "fav", Model.sameFavorite(cap.fav, fav), true)
         && Check.eq(logger, "cached", (cached["d"] as Array).size(), 3);
+    Application.Storage.deleteValue("dep|NSR:Quay:50122|SKY:Line:10");
+    return ok;
 }
 
 (:test)

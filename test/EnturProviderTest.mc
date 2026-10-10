@@ -73,15 +73,24 @@ function testEnturBuildNearbyRequest(logger as Logger) as Boolean {
 (:test)
 function testEnturParseLineOptions(logger as Logger) as Boolean {
     var opts = new EnturProvider().parseLineOptions(Fixtures.lineOptions());
-    return Check.eq(logger, "size", opts.size(), 5)
+    var no85 = true;
+    for (var i = 0; i < opts.size(); i++) {
+        if ("85".equals(opts[i]["lineCode"])) {
+            no85 = false;
+        }
+    }
+    return Check.eq(logger, "size", opts.size(), 3)
+        && Check.eq(logger, "no 85", no85, true)
         && Check.eq(logger, "q0", opts[0]["quayId"], "NSR:Quay:50122")
         && Check.eq(logger, "l0", opts[0]["lineId"], "SKY:Line:10")
         && Check.eq(logger, "code0", opts[0]["lineCode"], "10")
         && Check.eq(logger, "label0", opts[0]["label"], "10 > Mulen")
-        && Check.eq(logger, "label1 no calls", opts[1]["label"], "85")
+        && Check.eq(logger, "q1", opts[1]["quayId"], "NSR:Quay:50123")
+        && Check.eq(logger, "l1", opts[1]["lineId"], "SKY:Line:10")
+        && Check.eq(logger, "label1 max two", opts[1]["label"], "10 > Wergeland / Søndre Skogveien")
         && Check.eq(logger, "q2", opts[2]["quayId"], "NSR:Quay:50123")
-        && Check.eq(logger, "label2 max two", opts[2]["label"], "10 > Wergeland / Søndre Skogveien")
-        && Check.eq(logger, "label4", opts[4]["label"], "20 > Nesttun terminal")
+        && Check.eq(logger, "l2", opts[2]["lineId"], "SKY:Line:20")
+        && Check.eq(logger, "label2", opts[2]["label"], "20 > Nesttun terminal")
         && Check.eq(logger, "garbage", new EnturProvider().parseLineOptions(null), null);
 }
 

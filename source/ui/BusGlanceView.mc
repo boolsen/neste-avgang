@@ -17,6 +17,9 @@ class BusGlanceView extends WatchUi.GlanceView {
 
     function onShow() as Void {
         _fav = FavoritesStore.get(0);
+        _deps = null;
+        _error = null;
+        _code = 0;
         if (_fav == null) {
             return;
         }
@@ -28,6 +31,9 @@ class BusGlanceView extends WatchUi.GlanceView {
     }
 
     function onResult(fav as Dictionary, deps as Array or Null, error as Number or Null, code as Number) as Void {
+        if (_fav == null || !Model.sameFavorite(fav, _fav)) {
+            return;
+        }
         _error = error;
         _code = code;
         if (deps != null) {

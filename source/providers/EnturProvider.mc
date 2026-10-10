@@ -8,7 +8,7 @@ class EnturProvider extends Provider {
 
     const DEPARTURES_QUERY = "query($q:String!,$l:[ID!],$n:Int!){quay(id:$q){estimatedCalls(numberOfDepartures:$n,whiteListed:{lines:$l}){expectedDepartureTime realtime destinationDisplay{frontText} serviceJourney{line{publicCode}}}}}";
     const NEARBY_QUERY = "query($lat:Float!,$lon:Float!){nearest(latitude:$lat,longitude:$lon,maximumDistance:500,filterByPlaceTypes:[stopPlace],multiModalMode:child,first:10){edges{node{distance place{... on StopPlace{id name}}}}}}";
-    const LINE_OPTIONS_QUERY = "query($id:String!){stopPlace(id:$id){quays{id lines{id publicCode} estimatedCalls(numberOfDepartures:10,timeRange:86400){destinationDisplay{frontText} serviceJourney{line{id}}}}}}";
+    const LINE_OPTIONS_QUERY = "query($id:String!){stopPlace(id:$id){quays{id lines{id publicCode} estimatedCalls(numberOfDepartures:20,timeRange:604800,numberOfDeparturesPerLineAndDestinationDisplay:1){destinationDisplay{frontText} serviceJourney{line{id}}}}}}";
     const MAX_DESTS = 2;
 
     function initialize() {
@@ -72,6 +72,8 @@ class EnturProvider extends Provider {
         return request(LINE_OPTIONS_QUERY, {"id" => stopId});
     }
 
+    // One option per (quay, line) with at least one departure in the sampled window (7 days);
+    // lines without departures are skipped so every label carries a direction.
     function parseLineOptions(data) as Array or Null {
         var quays = dig(data, ["data", "stopPlace", "quays"]);
         if (!(quays instanceof Array)) {
@@ -100,6 +102,9 @@ class EnturProvider extends Provider {
                             dests.add(dest);
                         }
                     }
+                }
+                if (dests.size() == 0) {
+                    continue;
                 }
                 var label = code as String;
                 for (var d = 0; d < dests.size(); d++) {

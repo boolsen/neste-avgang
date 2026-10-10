@@ -72,7 +72,7 @@ Ordered list of `Favorite` dictionaries in `Application.Storage`.
 - Headers: `ET-Client-Name: <owner>-garminbus`, `Content-Type: application/json`. No API key.
 - **Departures**: `quay(id) { estimatedCalls(numberOfDepartures: N, whiteListed: { lines: [lineId] }) { expectedDepartureTime realtime destinationDisplay { frontText } serviceJourney { line { publicCode } } } }`
 - **Nearby stops**: `nearest(latitude, longitude, maximumDistance: 500, filterByPlaceTypes: [stopPlace], first: 10)`
-- **Line options for a stop**: `stopPlace(id) { quays { id estimatedCalls(numberOfDepartures: ~20, timeRange: ~2h) { destinationDisplay { frontText } serviceJourney { line { id publicCode } } } } }`. Group by (quay, line) and collect distinct destination texts for the label.
+- **Line options for a stop**: `stopPlace(id) { quays { id lines { id publicCode } estimatedCalls(numberOfDepartures: 20, timeRange: 604800, numberOfDeparturesPerLineAndDestinationDisplay: 1) { destinationDisplay { frontText } serviceJourney { line { id } } } } }`. Group by (quay, line) and collect distinct destination texts for the label. Lines with no departures in the next 7 days are not offered.
 - Queries request only the fields above to keep responses small (watch memory limits).
 - Verified 2026-10-10: Gyldenprisveien (`NSR:StopPlace:29169`) has quays `NSR:Quay:50123` (lines 10 and 20 one way) and `NSR:Quay:50122` (line 10 → Mulen). This confirms that quay + line is the right favorite key and that destination text is not, since one line shows several destination texts in the same direction.
 - Time parsing: ISO-8601 with offset (e.g. `2026-10-10T10:00:46+02:00`) → epoch seconds; minutes until departure = `(epoch − now) / 60`, floored, `0` shown as `Nå`.
