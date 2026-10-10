@@ -17,6 +17,9 @@ class BusGlanceView extends WatchUi.GlanceView {
     }
 
     function onShow() as Void {
+        if (_fetcher != null) {
+            _fetcher.cancel();
+        }
         var order = FavoritesStore.displayOrder(TimeUtil.currentHour());
         _rows = [];
         for (var i = 0; i < order.size() && i < MAX_ROWS; i++) {
@@ -24,6 +27,12 @@ class BusGlanceView extends WatchUi.GlanceView {
         }
         _fetcher = new RowFetcher(_rows, FETCH, method(:onRowsChanged));
         _fetcher.start();
+    }
+
+    function onHide() as Void {
+        if (_fetcher != null) {
+            _fetcher.cancel();
+        }
     }
 
     function onRowsChanged() as Void {

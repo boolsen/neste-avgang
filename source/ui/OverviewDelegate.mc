@@ -34,7 +34,7 @@ class OverviewDelegate extends WatchUi.BehaviorDelegate {
             _view.openFavorite(fav);
             return true;
         }
-        return false;
+        return true;   // a miss does nothing; the physical button opens the menu
     }
 
     function onSelect() as Boolean {

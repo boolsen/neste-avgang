@@ -8,6 +8,7 @@ class RowFetcher {
     hidden var _onChange as Method;
     hidden var _i = 0;
     hidden var _busy = false;
+    hidden var _cancelled = false;
 
     // onChange: () as Void, called after each row's result.
     function initialize(rows as Array, count as Number, onChange as Method) {
@@ -17,7 +18,7 @@ class RowFetcher {
     }
 
     function start() as Void {
-        if (_busy || _rows.size() == 0) {
+        if (_cancelled || _busy || _rows.size() == 0) {
             return;
         }
         _busy = true;
@@ -25,7 +26,16 @@ class RowFetcher {
         fetchCurrent();
     }
 
+    // Stops the chain: an in-flight response is dropped and no further rows are fetched.
+    function cancel() as Void {
+        _cancelled = true;
+    }
+
     function onResult(fav as Dictionary, deps as Array or Null, error as Number or Null, code as Number) as Void {
+        if (_cancelled) {
+            _busy = false;
+            return;
+        }
         var row = _rows[_i] as FavoriteRow;
         if (Model.sameFavorite(row.fav, fav)) {
             row.apply(deps, error, code);

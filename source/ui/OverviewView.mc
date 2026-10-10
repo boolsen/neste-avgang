@@ -22,6 +22,9 @@ class OverviewView extends WatchUi.View {
 
     function onShow() as Void {
         var order = FavoritesStore.displayOrder(TimeUtil.currentHour());
+        if (_fetcher != null) {
+            _fetcher.cancel();
+        }
         _order = [] as Array<Number>;
         _rows = [] as Array<FavoriteRow>;
         for (var i = 0; i < order.size() && i < MAX_ROWS; i++) {
@@ -35,6 +38,9 @@ class OverviewView extends WatchUi.View {
     }
 
     function onHide() as Void {
+        if (_fetcher != null) {
+            _fetcher.cancel();
+        }
         _timer.stop();
     }
 
