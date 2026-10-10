@@ -72,4 +72,172 @@ module Fixtures {
         };
     }
 
+    function lineOptions() as Dictionary {
+        return {
+            "data" => {
+                "stopPlace" => {
+                    "quays" => [
+                        {
+                            "id" => "NSR:Quay:50122",
+                            "lines" => [
+                                {
+                                    "id" => "SKY:Line:10",
+                                    "publicCode" => "10"
+                                },
+                                {
+                                    "id" => "SKY:Line:85",
+                                    "publicCode" => "85"
+                                }
+                            ],
+                            "estimatedCalls" => [
+                                {
+                                    "destinationDisplay" => {
+                                        "frontText" => "Mulen"
+                                    },
+                                    "serviceJourney" => {
+                                        "line" => {
+                                            "id" => "SKY:Line:10"
+                                        }
+                                    }
+                                },
+                                {
+                                    "destinationDisplay" => {
+                                        "frontText" => "Mulen"
+                                    },
+                                    "serviceJourney" => {
+                                        "line" => {
+                                            "id" => "SKY:Line:10"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id" => "NSR:Quay:50123",
+                            "lines" => [
+                                {
+                                    "id" => "SKY:Line:10",
+                                    "publicCode" => "10"
+                                },
+                                {
+                                    "id" => "SKY:Line:85",
+                                    "publicCode" => "85"
+                                },
+                                {
+                                    "id" => "SKY:Line:20",
+                                    "publicCode" => "20"
+                                }
+                            ],
+                            "estimatedCalls" => [
+                                {
+                                    "destinationDisplay" => {
+                                        "frontText" => "Nesttun terminal"
+                                    },
+                                    "serviceJourney" => {
+                                        "line" => {
+                                            "id" => "SKY:Line:20"
+                                        }
+                                    }
+                                },
+                                {
+                                    "destinationDisplay" => {
+                                        "frontText" => "Wergeland"
+                                    },
+                                    "serviceJourney" => {
+                                        "line" => {
+                                            "id" => "SKY:Line:10"
+                                        }
+                                    }
+                                },
+                                {
+                                    "destinationDisplay" => {
+                                        "frontText" => "Søndre Skogveien"
+                                    },
+                                    "serviceJourney" => {
+                                        "line" => {
+                                            "id" => "SKY:Line:10"
+                                        }
+                                    }
+                                },
+                                {
+                                    "destinationDisplay" => {
+                                        "frontText" => "Wergeland"
+                                    },
+                                    "serviceJourney" => {
+                                        "line" => {
+                                            "id" => "SKY:Line:10"
+                                        }
+                                    }
+                                },
+                                {
+                                    "destinationDisplay" => {
+                                        "frontText" => "Ekstra"
+                                    },
+                                    "serviceJourney" => {
+                                        "line" => {
+                                            "id" => "SKY:Line:10"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        };
+    }
+
+    function nearby() as Dictionary {
+        return {
+            "data" => {
+                "nearest" => {
+                    "edges" => [
+                        {
+                            "node" => {
+                                "distance" => 121.018810687526,
+                                "place" => {
+                                    "id" => "NSR:StopPlace:29282",
+                                    "name" => "Lien nord"
+                                }
+                            }
+                        },
+                        {
+                            "node" => {
+                                "distance" => 280.76410092369287,
+                                "place" => {
+                                    "id" => "NSR:StopPlace:29176",
+                                    "name" => "Lotheveien"
+                                }
+                            }
+                        },
+                        {
+                            "node" => {
+                                "distance" => 296.4159046678136,
+                                "place" => {
+                                    "id" => "NSR:StopPlace:29169",
+                                    "name" => "Gyldenprisveien"
+                                }
+                            }
+                        },
+                        {
+                            "node" => {
+                                "distance" => 300.0,
+                                "place" => null
+                            }
+                        },
+                        {
+                            "node" => {
+                                "distance" => 337.11303051298853,
+                                "place" => {
+                                    "id" => "NSR:StopPlace:29289",
+                                    "name" => "Strandlien"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        };
+    }
+
 }

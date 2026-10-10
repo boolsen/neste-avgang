@@ -50,3 +50,43 @@ function testProviderRegistry(logger as Logger) as Boolean {
     return Check.eq(logger, "entur", ProviderRegistry.get("entur").id(), "entur")
         && Check.eq(logger, "unknown", ProviderRegistry.get("nope"), null);
 }
+
+(:test)
+function testEnturParseNearbyStops(logger as Logger) as Boolean {
+    var stops = new EnturProvider().parseNearbyStops(Fixtures.nearby());
+    return Check.eq(logger, "size", stops.size(), 4)
+        && Check.eq(logger, "id0", stops[0]["stopId"], "NSR:StopPlace:29282")
+        && Check.eq(logger, "name0", stops[0]["name"], "Lien nord")
+        && Check.eq(logger, "dist0", stops[0]["dist"], 121)
+        && Check.eq(logger, "name2", stops[2]["name"], "Gyldenprisveien")
+        && Check.eq(logger, "name3", stops[3]["name"], "Strandlien")
+        && Check.eq(logger, "garbage", new EnturProvider().parseNearbyStops({}), null);
+}
+
+(:test)
+function testEnturBuildNearbyRequest(logger as Logger) as Boolean {
+    var vars = new EnturProvider().buildNearbyStopsRequest(60.3815d, 5.3174d)["params"]["variables"];
+    return Check.eq(logger, "lat", vars["lat"], 60.3815d)
+        && Check.eq(logger, "lon", vars["lon"], 5.3174d);
+}
+
+(:test)
+function testEnturParseLineOptions(logger as Logger) as Boolean {
+    var opts = new EnturProvider().parseLineOptions(Fixtures.lineOptions());
+    return Check.eq(logger, "size", opts.size(), 5)
+        && Check.eq(logger, "q0", opts[0]["quayId"], "NSR:Quay:50122")
+        && Check.eq(logger, "l0", opts[0]["lineId"], "SKY:Line:10")
+        && Check.eq(logger, "code0", opts[0]["lineCode"], "10")
+        && Check.eq(logger, "label0", opts[0]["label"], "10 > Mulen")
+        && Check.eq(logger, "label1 no calls", opts[1]["label"], "85")
+        && Check.eq(logger, "q2", opts[2]["quayId"], "NSR:Quay:50123")
+        && Check.eq(logger, "label2 max two", opts[2]["label"], "10 > Wergeland / Søndre Skogveien")
+        && Check.eq(logger, "label4", opts[4]["label"], "20 > Nesttun terminal")
+        && Check.eq(logger, "garbage", new EnturProvider().parseLineOptions(null), null);
+}
+
+(:test)
+function testEnturBuildLineOptionsRequest(logger as Logger) as Boolean {
+    var vars = new EnturProvider().buildLineOptionsRequest("NSR:StopPlace:29169")["params"]["variables"];
+    return Check.eq(logger, "id", vars["id"], "NSR:StopPlace:29169");
+}
