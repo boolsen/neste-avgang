@@ -1,3 +1,24 @@
 <strings>
     <string id="AppName" scope="glance">Buss</string>
+    <string id="AddFavorite" scope="glance">Legg til favoritt</string>
+    <string id="Now" scope="glance">Nå</string>
+    <string id="MinutesFmt" scope="glance">$1$ min</string>
+    <string id="ApproxFmt" scope="glance">ca. $1$</string>
+    <string id="Loading" scope="glance">Henter…</string>
+    <string id="NoPhone" scope="glance">Ingen telefon</string>
+    <string id="ErrorFmt" scope="glance">Feil ($1$)</string>
+    <string id="ParseError" scope="glance">Ukjent svar</string>
+    <string id="NoDepartures" scope="glance">Ingen avganger</string>
+    <string id="UpdatedFmt">oppdatert $1$</string>
+    <string id="FindingPosition">Finner posisjon…</string>
+    <string id="NoPosition">Fant ikke posisjon</string>
+    <string id="TapToRetry">Trykk for å prøve igjen</string>
+    <string id="NearbyStops">Stopp i nærheten</string>
+    <string id="NoStopsNearby">Ingen stopp innen 500 m</string>
+    <string id="DistanceFmt">$1$ m</string>
+    <string id="ChooseLine">Velg linje</string>
+    <string id="NoLines">Ingen linjer</string>
+    <string id="Menu">Meny</string>
+    <string id="MoveToTop">Flytt øverst</string>
+    <string id="DeleteFavorite">Slett favoritt</string>
 </strings>
