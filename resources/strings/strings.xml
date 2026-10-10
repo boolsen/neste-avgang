@@ -22,4 +22,10 @@
     <string id="MoveToTop">Flytt øverst</string>
     <string id="DeleteFavorite">Slett favoritt</string>
     <string id="Overview">Neste avganger</string>
+    <string id="MoveUp">Flytt opp</string>
+    <string id="MoveDown">Flytt ned</string>
+    <string id="TimeWindow">Tidsvindu</string>
+    <string id="AllDay">Hele dagen</string>
+    <string id="StartHour">Fra kl.</string>
+    <string id="EndHour">Til kl.</string>
 </strings>

@@ -46,10 +46,21 @@ class DeparturesDelegate extends WatchUi.BehaviorDelegate {
     }
 
     hidden function openMenu() as Void {
+        var n = FavoritesStore.count();
+        var i = _view.index;
         var menu = new WatchUi.Menu2({:title => Fmt.str(Rez.Strings.Menu)});
         menu.addItem(new WatchUi.MenuItem(Fmt.str(Rez.Strings.AddFavorite), null, :add, null));
-        if (FavoritesStore.count() > 0) {
-            menu.addItem(new WatchUi.MenuItem(Fmt.str(Rez.Strings.MoveToTop), null, :top, null));
+        if (n > 0) {
+            if (i > 0) {
+                menu.addItem(new WatchUi.MenuItem(Fmt.str(Rez.Strings.MoveUp), null, :up, null));
+            }
+            if (i < n - 1) {
+                menu.addItem(new WatchUi.MenuItem(Fmt.str(Rez.Strings.MoveDown), null, :down, null));
+            }
+            if (i > 0) {
+                menu.addItem(new WatchUi.MenuItem(Fmt.str(Rez.Strings.MoveToTop), null, :top, null));
+            }
+            menu.addItem(new WatchUi.MenuItem(Fmt.str(Rez.Strings.TimeWindow), null, :window, null));
             menu.addItem(new WatchUi.MenuItem(Fmt.str(Rez.Strings.DeleteFavorite), null, :delete, null));
         }
         WatchUi.pushView(menu, new FavoritesMenuDelegate(_view), WatchUi.SLIDE_UP);
