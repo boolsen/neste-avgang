@@ -1,7 +1,7 @@
 import Toybox.Application;
 import Toybox.Lang;
 
-// Ordered list of Favorite dictionaries. Index 0 is shown in the glance.
+// Ordered (ranked) list of Favorite dictionaries. displayOrder() decides what the glance/overview show first.
 (:glance)
 module FavoritesStore {
     const KEY = "favorites";
@@ -46,6 +46,57 @@ module FavoritesStore {
             return;
         }
         Application.Storage.setValue(KEY, [a[i]].addAll(without(a, i)));
+    }
+
+    function moveUp(i as Number) as Void {
+        swap(i - 1, i);
+    }
+
+    function moveDown(i as Number) as Void {
+        swap(i, i + 1);
+    }
+
+    function setWindow(i as Number, fromH as Number or Null, toH as Number or Null) as Void {
+        var a = all();
+        if (i < 0 || i >= a.size()) {
+            return;
+        }
+        var fav = a[i] as Dictionary;
+        if (fromH == null || toH == null) {
+            fav.remove("fromH");
+            fav.remove("toH");
+        } else {
+            fav["fromH"] = fromH;
+            fav["toH"] = toH;
+        }
+        a[i] = fav;
+        Application.Storage.setValue(KEY, a);
+    }
+
+    // All indexes: favorites active at `hour` first (rank order), then the rest (rank order).
+    function displayOrder(hour as Number) as Array<Number> {
+        var a = all();
+        var active = [];
+        var inactive = [];
+        for (var i = 0; i < a.size(); i++) {
+            if (Model.isActive(a[i] as Dictionary, hour)) {
+                active.add(i);
+            } else {
+                inactive.add(i);
+            }
+        }
+        return active.addAll(inactive);
+    }
+
+    function swap(i as Number, j as Number) as Void {
+        var a = all();
+        if (i < 0 || j >= a.size() || i >= j) {
+            return;
+        }
+        var tmp = a[i];
+        a[i] = a[j];
+        a[j] = tmp;
+        Application.Storage.setValue(KEY, a);
     }
 
     function clear() as Void {

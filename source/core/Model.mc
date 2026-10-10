@@ -38,4 +38,26 @@ module Model {
         }
         return result;
     }
+
+    // Optional hour window: "fromH" (0-23) .. "toH" (1-24, exclusive). Missing = always active.
+    function isActive(fav as Dictionary, hour as Number) as Boolean {
+        var from = fav["fromH"];
+        var to = fav["toH"];
+        if (from == null || to == null) {
+            return true;
+        }
+        if ((from as Number) < (to as Number)) {
+            return hour >= from && hour < to;
+        }
+        return hour >= from || hour < to; // window crosses midnight
+    }
+
+    function windowText(fav as Dictionary) as String or Null {
+        var from = fav["fromH"];
+        var to = fav["toH"];
+        if (from == null || to == null) {
+            return null;
+        }
+        return (from as Number).format("%02d") + "-" + (to as Number).format("%02d");
+    }
 }

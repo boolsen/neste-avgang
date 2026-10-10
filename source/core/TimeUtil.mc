@@ -1,4 +1,5 @@
 import Toybox.Lang;
+import Toybox.System;
 import Toybox.Time;
 import Toybox.Time.Gregorian;
 
@@ -60,5 +61,9 @@ module TimeUtil {
             return -1;
         }
         return diff / 60;
+    }
+
+    function currentHour() as Number {
+        return System.getClockTime().hour;
     }
 }
