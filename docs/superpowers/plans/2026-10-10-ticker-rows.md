@@ -15,7 +15,7 @@
 
 - Devices: `venu445mm`, `venu441mm`, `vivoactive6`. Build all three, with no new warnings.
 - Glance-reachable code must be `(:glance)`. No literal UI text in `.mc`, except separators (`"  "`).
-- Ticker constants: `PAUSE_MS = 1500`, `SPEED_PX_S = 40`, `FRAME_MS = 150`, gap between time and info `GAP_PX = 8`.
+- Ticker constants: `PAUSE_MS = 1500`, `SPEED_PX_S = 60`, `FRAME_MS = 150`, gap between time and info `GAP_PX = 8`.
 - The animation timer runs only while the view is visible and at least one row overflows. Stop it in `onHide`.
 - `make test`: reuse a running simulator, or start one with `make sim` (wait ~8 s) and `pkill -f "ConnectIQ.app"` afterwards. The exit status reflects pass/fail.
 - End commit messages with a blank line, then `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.

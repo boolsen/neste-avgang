@@ -4,7 +4,7 @@ import Toybox.Lang;
 (:glance)
 module Ticker {
     const PAUSE_MS = 1500;
-    const SPEED_PX_S = 40;
+    const SPEED_PX_S = 60;
 
     function offset(elapsedMs as Number, overflowPx as Number) as Number {
         if (overflowPx <= 0) {

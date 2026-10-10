@@ -69,7 +69,7 @@ On-device feedback: `<line> <stop>: <time>` rows cut off the time, which is the 
   - Right, grey: the info text `<label>  <stopName>`, e.g. `10 > Mulen  Gyldenprisveien`. The label already includes the line and direction.
 - **Scrolling:** the info text is clipped to the space right of the time.
   - If it fits, it stays still.
-  - Otherwise it pauses 1500 ms at the start, scrolls left at 40 px/s until its end is visible, pauses 1500 ms, then jumps back and repeats.
+  - Otherwise it pauses 1500 ms at the start, scrolls left at 60 px/s until its end is visible, pauses 1500 ms, then jumps back and repeats.
   - The scroll offset is a pure function of elapsed time.
 - **Animation:** a timer redraws every 150 ms, only while the glance or overview is visible and at least one row overflows. It stops on hide.
 - **Glance:** 2 rows. With exactly 1 favorite, a single row is vertically centred.
