@@ -59,3 +59,19 @@ The user's commute has two favorites: the home stop on the way to work and the c
 
 ## Out of scope
 Weekday-specific windows, choosing a favorite by closest location, and adding stops beyond 500 m.
+
+## Addendum: time-first rows with scrolling text (approved 2026-10-10)
+
+On-device feedback: `<line> <stop>: <time>` rows cut off the time, which is the most important part, and showed no direction.
+
+- **Row layout (glance and overview):**
+  - Left, white, never cut: the next departure's minutes, or a status when there is none.
+  - Right, grey: the info text `<label>  <stopName>`, e.g. `10 > Mulen  Gyldenprisveien`. The label already includes the line and direction.
+- **Scrolling:** the info text is clipped to the space right of the time.
+  - If it fits, it stays still.
+  - Otherwise it pauses 1500 ms at the start, scrolls left at 40 px/s until its end is visible, pauses 1500 ms, then jumps back and repeats.
+  - The scroll offset is a pure function of elapsed time.
+- **Animation:** a timer redraws every 150 ms, only while the glance or overview is visible and at least one row overflows. It stops on hide.
+- **Glance:** 2 rows. With exactly 1 favorite, a single row is vertically centred.
+- **Overview:** each row is left-aligned inside the round-screen chord at its height.
+- **Risk:** the glance redraw rate may be throttled on the device. If so, the glance shows the start of the info text (time first) without scrolling. This is acceptable.
