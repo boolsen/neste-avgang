@@ -44,10 +44,20 @@ class StatusView extends WatchUi.View {
 
 class StatusDelegate extends WatchUi.BehaviorDelegate {
     hidden var _view as StatusView;
+    hidden var _onBack;
 
-    function initialize(view as StatusView) {
+    function initialize(view as StatusView, onBack) {
         BehaviorDelegate.initialize();
         _view = view;
+        _onBack = onBack;
+    }
+
+    // Notify the owner, then return false so the default Back (pop) still happens.
+    function onBack() as Boolean {
+        if (_onBack != null) {
+            _onBack.invoke();
+        }
+        return false;
     }
 
     function onSelect() as Boolean {

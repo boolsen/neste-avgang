@@ -17,6 +17,7 @@ class AddFavoriteFlow {
     hidden var _stops = [];
     hidden var _options = [];
     hidden var _stop = null;
+    hidden var _cancelled = false;
 
     // onSaved: (index as Number) as Void
     function initialize(onSaved as Method) {
@@ -27,18 +28,29 @@ class AddFavoriteFlow {
 
     function start() as Void {
         _status = new StatusView(Fmt.str(Rez.Strings.FindingPosition));
-        WatchUi.pushView(_status, new StatusDelegate(_status), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(_status, new StatusDelegate(_status, method(:cancel)), WatchUi.SLIDE_LEFT);
         _onStatus = true;
         requestPosition();
     }
 
+    // Called on Back from any flow screen: stop GPS/timer and ignore late callbacks.
+    function cancel() as Void {
+        _cancelled = true;
+        _timer.stop();
+        Position.enableLocationEvents(Position.LOCATION_DISABLE, null);
+    }
+
     function requestPosition() as Void {
         showStatus(Fmt.str(Rez.Strings.FindingPosition));
+        _timer.stop();
         _timer.start(method(:onPositionTimeout), GPS_TIMEOUT_MS, false);
         Position.enableLocationEvents(Position.LOCATION_ONE_SHOT, method(:onPosition));
     }
 
     function onPosition(info as Position.Info) as Void {
+        if (_cancelled) {
+            return;
+        }
         _timer.stop();
         if (info.position == null) {
             onPositionTimeout();
@@ -50,12 +62,18 @@ class AddFavoriteFlow {
     }
 
     function onPositionTimeout() as Void {
+        if (_cancelled) {
+            return;
+        }
         Position.enableLocationEvents(Position.LOCATION_DISABLE, null);
         _status.setError(Fmt.str(Rez.Strings.NoPosition), method(:requestPosition));
     }
 
     function onNearby(code as Number, data) as Void {
-        if (failed(code)) {
+        if (_cancelled) {
+            return;
+        }
+        if (failed(code, method(:requestPosition))) {
             return;
         }
         var stops = _provider.parseNearbyStops(data);
@@ -74,24 +92,31 @@ class AddFavoriteFlow {
             menu.addItem(new WatchUi.MenuItem(s["name"] as String,
                 Lang.format(Fmt.str(Rez.Strings.DistanceFmt), [s["dist"]]), i, null));
         }
-        WatchUi.switchToView(menu, new IndexMenuDelegate(method(:onStopChosen)), WatchUi.SLIDE_LEFT);
+        WatchUi.switchToView(menu, new IndexMenuDelegate(method(:onStopChosen), method(:cancel)), WatchUi.SLIDE_LEFT);
         _onStatus = false;
     }
 
     function onStopChosen(index as Number) as Void {
         _stop = (_stops as Array<Dictionary>)[index];
+        retryLineOptions();
+    }
+
+    function retryLineOptions() as Void {
         showStatus(Fmt.str(Rez.Strings.Loading));
         Net.send(_provider.buildLineOptionsRequest((_stop as Dictionary)["stopId"] as String), method(:onLineOptions));
     }
 
     function onLineOptions(code as Number, data) as Void {
-        if (failed(code)) {
+        if (_cancelled) {
+            return;
+        }
+        if (failed(code, method(:retryLineOptions))) {
             return;
         }
         var options = _provider.parseLineOptions(data);
         if (options == null || options.size() == 0) {
             _status.setError(Fmt.str(options == null ? Rez.Strings.ParseError : Rez.Strings.NoLines),
-                method(:requestPosition));
+                method(:retryLineOptions));
             return;
         }
         _options = options;
@@ -99,7 +124,7 @@ class AddFavoriteFlow {
         for (var i = 0; i < options.size(); i++) {
             menu.addItem(new WatchUi.MenuItem((options as Array<Dictionary>)[i]["label"] as String, null, i, null));
         }
-        WatchUi.switchToView(menu, new IndexMenuDelegate(method(:onLineChosen)), WatchUi.SLIDE_LEFT);
+        WatchUi.switchToView(menu, new IndexMenuDelegate(method(:onLineChosen), method(:cancel)), WatchUi.SLIDE_LEFT);
         _onStatus = false;
     }
 
@@ -114,12 +139,12 @@ class AddFavoriteFlow {
     }
 
     // Shows a network error with retry; returns true if the request failed.
-    hidden function failed(code as Number) as Boolean {
+    hidden function failed(code as Number, retry as Method) as Boolean {
         var err = ServiceError.fromResponseCode(code);
         if (err == null) {
             return false;
         }
-        _status.setError(ServiceError.message(err, code), method(:requestPosition));
+        _status.setError(ServiceError.message(err, code), retry);
         return true;
     }
 
@@ -130,7 +155,7 @@ class AddFavoriteFlow {
             return;
         }
         _status = new StatusView(text);
-        WatchUi.switchToView(_status, new StatusDelegate(_status), WatchUi.SLIDE_IMMEDIATE);
+        WatchUi.switchToView(_status, new StatusDelegate(_status, method(:cancel)), WatchUi.SLIDE_IMMEDIATE);
         _onStatus = true;
     }
 }
