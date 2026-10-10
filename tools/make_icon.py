@@ -6,7 +6,6 @@ import zlib
 SS = 8
 BLUE = (0x0E, 0x4C, 0x92)
 WHITE = (255, 255, 255)
-AMBER = (0xFF, 0xB3, 0x00)
 
 
 def rrect(x0, y0, x1, y1, r, col):
@@ -27,9 +26,9 @@ SHAPES = [
     circle(0.5, 0.5, 0.5, BLUE),
     rrect(0.27, 0.20, 0.73, 0.74, 0.08, WHITE),
     rrect(0.32, 0.27, 0.68, 0.50, 0.03, BLUE),
-    rrect(0.36, 0.225, 0.64, 0.255, 0, AMBER),
-    circle(0.36, 0.64, 0.035, AMBER),
-    circle(0.64, 0.64, 0.035, AMBER),
+    rrect(0.36, 0.225, 0.64, 0.255, 0, BLUE),
+    circle(0.36, 0.64, 0.035, BLUE),
+    circle(0.64, 0.64, 0.035, BLUE),
     rrect(0.31, 0.72, 0.39, 0.80, 0.02, WHITE),
     rrect(0.61, 0.72, 0.69, 0.80, 0.02, WHITE),
 ]
