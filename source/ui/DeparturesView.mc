@@ -16,15 +16,27 @@ class DeparturesView extends WatchUi.View {
     hidden var _updated = null;
     hidden var _loading = false;
     hidden var _refreshTimer;
+    hidden var _startTimer;
+    hidden var _autoAddStarted = false;
 
     function initialize() {
         View.initialize();
         _refreshTimer = new Timer.Timer();
+        _startTimer = new Timer.Timer();
     }
 
     function onShow() as Void {
+        if (FavoritesStore.count() == 0 && !_autoAddStarted) {
+            _autoAddStarted = true;
+            // Defer: pushing a view from inside onShow is not safe.
+            _startTimer.start(method(:startAddFlow), 100, false);
+        }
         refresh();
         _refreshTimer.start(method(:refresh), REFRESH_MS, true);
+    }
+
+    function startAddFlow() as Void {
+        new AddFavoriteFlow(method(:showIndex)).start();
     }
 
     function onHide() as Void {
