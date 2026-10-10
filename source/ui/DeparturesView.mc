@@ -19,8 +19,9 @@ class DeparturesView extends WatchUi.View {
     hidden var _startTimer;
     hidden var _autoAddStarted = false;
 
-    function initialize() {
+    function initialize(startIndex as Number) {
         View.initialize();
+        index = startIndex;
         _refreshTimer = new Timer.Timer();
         _startTimer = new Timer.Timer();
     }
@@ -101,7 +102,9 @@ class DeparturesView extends WatchUi.View {
 
         dc.drawText(cx, h * 0.17, Graphics.FONT_SMALL, fav["label"] as String, center);
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, h * 0.27, Graphics.FONT_XTINY, fav["stopName"] as String, center);
+        var window = Model.windowText(fav);
+        var stopLine = (window == null) ? fav["stopName"] as String : (fav["stopName"] as String) + "  " + window;
+        dc.drawText(cx, h * 0.27, Graphics.FONT_XTINY, stopLine, center);
 
         var now = Time.now().value();
         var shown = (_deps == null) ? [] : Model.upcoming(_deps, now, SHOWN);

@@ -10,12 +10,28 @@ class DeparturesDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onNextPage() as Boolean {
-        _view.showIndex(_view.index + 1);
+        var n = FavoritesStore.count();
+        if (n == 0) {
+            return true;
+        }
+        if (_view.index + 1 >= n) {
+            Pages.showOverview(WatchUi.SLIDE_UP);
+        } else {
+            _view.showIndex(_view.index + 1);
+        }
         return true;
     }
 
     function onPreviousPage() as Boolean {
-        _view.showIndex(_view.index - 1);
+        var n = FavoritesStore.count();
+        if (n == 0) {
+            return true;
+        }
+        if (_view.index == 0) {
+            Pages.showOverview(WatchUi.SLIDE_DOWN);
+        } else {
+            _view.showIndex(_view.index - 1);
+        }
         return true;
     }
 
