@@ -74,3 +74,23 @@ function testWindowText(logger as Logger) as Boolean {
         && Check.eq(logger, "22-2", Model.windowText(windowFav(22, 2)), "22-02")
         && Check.eq(logger, "12-24", Model.windowText(windowFav(12, 24)), "12-24");
 }
+
+(:test)
+function testRowDestHiddenWhenSameAsSingleLabelDest(logger as Logger) as Boolean {
+    return Check.eq(logger, "same", Model.rowDest("10 > Mulen", "Mulen"), "");
+}
+
+(:test)
+function testRowDestShownWhenDifferent(logger as Logger) as Boolean {
+    return Check.eq(logger, "diff", Model.rowDest("10 > Mulen", "Ekstra"), "Ekstra");
+}
+
+(:test)
+function testRowDestShownWhenLabelHasSeveralDests(logger as Logger) as Boolean {
+    return Check.eq(logger, "multi", Model.rowDest("10 > Wergeland / Søndre Skogveien", "Wergeland"), "Wergeland");
+}
+
+(:test)
+function testRowDestShownWhenLabelHasNoDest(logger as Logger) as Boolean {
+    return Check.eq(logger, "none", Model.rowDest("10", "Mulen"), "Mulen");
+}

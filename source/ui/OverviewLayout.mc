@@ -22,8 +22,13 @@ module OverviewLayout {
 
     // Usable text width for row i on a round screen (90% of the chord at that height).
     function rowWidth(i as Number, w as Number, h as Number) as Number {
+        return chordWidth(rowY(i, h), w, h);
+    }
+
+    // Usable text width at height y on a round screen (90% of the chord there).
+    function chordWidth(y as Number, w as Number, h as Number) as Number {
         var r = h / 2.0;
-        var dy = rowY(i, h) - r;
+        var dy = y - r;
         var half = Math.sqrt(r * r - dy * dy);
         var chord = 2 * half * 0.9;
         return (chord < w * 0.9 ? chord : w * 0.9).toNumber();

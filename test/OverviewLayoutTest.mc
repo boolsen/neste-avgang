@@ -22,3 +22,12 @@ function testOverviewRowWidthFitsCircle(logger as Logger) as Boolean {
     return Check.eq(logger, "mid wider than top", mid > top, true)
         && Check.eq(logger, "mid below 90% width", mid <= (w * 0.9).toNumber(), true);
 }
+
+(:test)
+function testChordWidthAtY(logger as Logger) as Boolean {
+    var w = 454;
+    var h = 454;
+    return Check.eq(logger, "centre = 90% width", OverviewLayout.chordWidth(227, w, h), (w * 0.9).toNumber())
+        && Check.eq(logger, "near top narrower", OverviewLayout.chordWidth(77, w, h) < OverviewLayout.chordWidth(190, w, h), true)
+        && Check.eq(logger, "same as row", OverviewLayout.chordWidth(OverviewLayout.rowY(0, h), w, h), OverviewLayout.rowWidth(0, w, h));
+}

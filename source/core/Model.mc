@@ -39,6 +39,16 @@ module Model {
         return result;
     }
 
+    // Destination to show in a departure row: "" when it's the label's only destination ("10 > Mulen").
+    function rowDest(label as String, dest as String) as String {
+        var i = label.find(" > ");
+        if (i == null) {
+            return dest;
+        }
+        var labelDest = label.substring(i + 3, null) as String;
+        return (labelDest.find(" / ") == null && labelDest.equals(dest)) ? "" : dest;
+    }
+
     // Optional hour window: "fromH" (0-23) .. "toH" (1-24, exclusive). Missing = always active.
     function isActive(fav as Dictionary, hour as Number) as Boolean {
         var from = fav["fromH"];
