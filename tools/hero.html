@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- Store hero image (1440x720). Render: Chrome --headless --screenshot=store/hero-1440x720.png --window-size=1440,720 tools/hero.html -->
+<html><head><meta charset="utf-8"><style>
+  html, body { margin: 0; width: 1440px; height: 720px; overflow: hidden; }
+  body {
+    background: radial-gradient(circle at 75% 50%, #1a5fae 0%, #0E4C92 45%, #082f5c 100%);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: #fff;
+    display: flex; align-items: center;
+  }
+  .text { margin-left: 100px; width: 640px; }
+  .text img { width: 132px; height: 132px; display: block; margin-bottom: 36px; border-radius: 50%; box-shadow: 0 0 0 6px #fff;
+    filter: drop-shadow(0 6px 16px rgba(0,0,0,.35)); }
+  h1 { font-size: 84px; font-weight: 700; white-space: nowrap; margin: 0 0 18px; letter-spacing: -1px; }
+  p { font-size: 34px; line-height: 1.35; margin: 0; color: #d6e4f5; }
+  .watches { position: relative; flex: 1; height: 100%; }
+  .watch { position: absolute; border-radius: 50%; background: #000;
+    box-shadow: 0 0 0 14px #2b2e33, 0 0 0 18px #4a4e55, 0 24px 60px rgba(0,0,0,.55); }
+  .watch img { width: 100%; height: 100%; border-radius: 50%; display: block; }
+  .back  { width: 360px; height: 360px; left: 290px; top: 40px; }
+  .front { width: 400px; height: 400px; left: 0px; top: 280px; }
+</style></head><body>
+  <div class="text">
+    <img src="../store/icon-500.png" alt="">
+    <h1>Neste avgang</h1>
+    <p>Sanntidsavganger for buss, trikk, tog og båt i hele Norge – rett på klokka.</p>
+  </div>
+  <div class="watches">
+    <div class="watch back"><img src="../store/screenshots/2-favorite.png" alt=""></div>
+    <div class="watch front"><img src="../store/screenshots/1-overview.png" alt=""></div>
+  </div>
+</body></html>

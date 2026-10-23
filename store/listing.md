@@ -21,6 +21,7 @@ Real-time Norwegian public transport departures on your wrist. Save a stop + lin
 
 ## Support
 https://github.com/boolsen/neste-avgang/issues
+nesteavgangapp@gmail.com
 
 ## Store fields
 | Field | Value |
@@ -33,5 +34,6 @@ https://github.com/boolsen/neste-avgang/issues
 
 ## Assets
 - Icon: `store/icon-500.png`
+- Hero: `store/hero-1440x720.png` (rendered from `tools/hero.html` with headless Chrome)
 - Screenshots: `store/screenshots/1-overview.png`, `2-favorite.png`, `3-glance.png`
   (Venu 4 45 mm simulator, live data. `3-glance.png` is drawn by a demo-only view that shows the glance rows centred, as the selected glance appears on the watch.)
