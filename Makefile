@@ -26,7 +26,7 @@ icons:
 	python3 -I tools/make_icon.py 70 resources/drawables/launcher_icon.png
 	mkdir -p store
 	python3 -I tools/make_icon.py 500 store/icon-500.png
-	for s in 38 54 56 60 61 65; do \
+	for s in 38 40 54 56 60 61 65; do \
 		mkdir -p resources-icon$$s/drawables; \
 		cp resources/drawables/drawables.xml resources-icon$$s/drawables/; \
 		python3 -I tools/make_icon.py $$s resources-icon$$s/drawables/launcher_icon.png; \
