@@ -8,9 +8,7 @@ import Toybox.WatchUi;
 // Occupies one view-stack slot above DeparturesView; steps replace each other with switchToView.
 // Back from any step returns to DeparturesView.
 class AddFavoriteFlow {
-    const GPS_TIMEOUT_MS = 15000;
-    // The stop search covers 500 m, so a rough fix is enough: reuse a recent one, else take the first usable one.
-    const RECENT_FIX_S = 120;
+    const GPS_TIMEOUT_MS = 30000;
 
     hidden var _provider;
     hidden var _onSaved as Method;
@@ -44,10 +42,10 @@ class AddFavoriteFlow {
     }
 
     function requestPosition() as Void {
-        var last = Position.getInfo();
-        if (last.position != null && last.accuracy != Position.QUALITY_NOT_AVAILABLE && last.when != null
-                && Time.now().subtract(last.when as Time.Moment).value() <= RECENT_FIX_S) {
-            searchNear(last.position as Position.Location);
+        // Reuse a recent fix, else take the first usable live one.
+        var recent = PositionFix.recent(Position.getInfo(), Time.now());
+        if (recent != null) {
+            searchNear(recent);
             return;
         }
         showStatus(Fmt.str(Rez.Strings.FindingPosition));
@@ -77,10 +75,10 @@ class AddFavoriteFlow {
             return;
         }
         Position.enableLocationEvents(Position.LOCATION_DISABLE, null);
-        // Falls back to the watch's last known fix (may be stale; the stop names/distances make that visible).
-        var last = Position.getInfo();
-        if (last.position != null && last.accuracy != Position.QUALITY_NOT_AVAILABLE) {
-            searchNear(last.position as Position.Location);
+        // Falls back to the watch's last known fix only if it is recent; an old one may be in another city.
+        var recent = PositionFix.recent(Position.getInfo(), Time.now());
+        if (recent != null) {
+            searchNear(recent);
             return;
         }
         _status.setError(Fmt.str(Rez.Strings.NoPosition), method(:requestPosition));
