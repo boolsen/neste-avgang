@@ -8,7 +8,7 @@ class EnturProvider extends Provider {
 
     const DEPARTURES_QUERY = "query($q:String!,$l:[ID!],$n:Int!){quay(id:$q){estimatedCalls(numberOfDepartures:$n,whiteListed:{lines:$l}){expectedDepartureTime realtime destinationDisplay{frontText} serviceJourney{line{publicCode}}}}}";
     const NEARBY_QUERY = "query($lat:Float!,$lon:Float!){nearest(latitude:$lat,longitude:$lon,maximumDistance:500,filterByPlaceTypes:[stopPlace],multiModalMode:child,first:10){edges{node{distance place{... on StopPlace{id name}}}}}}";
-    const LINE_OPTIONS_QUERY = "query($id:String!){stopPlace(id:$id){quays{id lines{id publicCode} estimatedCalls(numberOfDepartures:20,timeRange:604800,numberOfDeparturesPerLineAndDestinationDisplay:1){destinationDisplay{frontText} serviceJourney{line{id}}}}}}";
+    const LINE_OPTIONS_QUERY = "query($id:String!){stopPlace(id:$id){quays{id lines{id publicCode} estimatedCalls(numberOfDepartures:50,timeRange:604800,numberOfDeparturesPerLineAndDestinationDisplay:1){destinationDisplay{frontText} serviceJourney{line{id}}}}}}";
     const MAX_DESTS = 2;
 
     function initialize() {
