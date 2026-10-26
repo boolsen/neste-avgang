@@ -13,6 +13,7 @@ epix2.resourcePath = resources;resources-icon60
 epix2pro42mm.resourcePath = resources;resources-icon60
 epix2pro47mm.resourcePath = resources;resources-icon60
 epix2pro51mm.resourcePath = resources;resources-icon60
+fenix7spro.resourcePath = resources;resources-icon40
 fenix843mm.resourcePath = resources;resources-icon60
 fenix847mm.resourcePath = resources;resources-icon65
 fenix8pro47mm.resourcePath = resources;resources-icon65

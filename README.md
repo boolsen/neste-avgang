@@ -14,7 +14,7 @@ Next departures for saved bus favorites (exact platform + line) on Garmin watche
 - `make icons` – regenerate launcher icons (per icon size, `resources-icon<px>`) and `store/icon-500.png`
 - `make export` – build store package `bin/NesteAvgang.iq`
 
-Supported devices: round AMOLED watches with Connect IQ 5.0+ plus Forerunner 255 Music (51 products, see `manifest.xml`). Launcher icon size per device comes from the SDK's `compiler.json`; `monkey.jungle` maps devices to `resources-icon<px>` (70 px uses base `resources`).
+Supported devices: round AMOLED watches with Connect IQ 5.0+ plus Forerunner 255 Music and Fenix 7S Pro (52 products, see `manifest.xml`). Launcher icon size per device comes from the SDK's `compiler.json`; `monkey.jungle` maps devices to `resources-icon<px>` (70 px uses base `resources`).
 
 ## Sideload
 Copy `bin/GarminBus-<device>.prg` to `GARMIN/APPS/` on the watch via OpenMTP.
