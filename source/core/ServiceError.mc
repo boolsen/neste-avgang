@@ -7,7 +7,8 @@ module ServiceError {
         NO_PHONE = 1,
         HTTP_ERROR = 2,
         PARSE_ERROR = 3,
-        NO_DEPARTURES = 4
+        NO_DEPARTURES = 4,
+        TIMEOUT = 5
     }
 
     function fromResponseCode(code as Number) as Number or Null {
@@ -16,6 +17,9 @@ module ServiceError {
         }
         if (code == Communications.BLE_CONNECTION_UNAVAILABLE || code == Communications.BLE_HOST_TIMEOUT) {
             return NO_PHONE;
+        }
+        if (code == Communications.NETWORK_REQUEST_TIMED_OUT) {
+            return TIMEOUT;
         }
         return HTTP_ERROR;
     }
@@ -26,6 +30,9 @@ module ServiceError {
         }
         if (err == PARSE_ERROR) {
             return Fmt.str(Rez.Strings.ParseError);
+        }
+        if (err == TIMEOUT) {
+            return Fmt.str(Rez.Strings.NoResponse);
         }
         if (err == NO_DEPARTURES) {
             return Fmt.str(Rez.Strings.NoDepartures);

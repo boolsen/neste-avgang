@@ -67,3 +67,9 @@ function testServiceEmptyAndParseError(logger as Logger) as Boolean {
         && Check.eq(logger, "bad error", bad.error, ServiceError.PARSE_ERROR)
         && Check.eq(logger, "bad deps", bad.deps, null);
 }
+
+(:test)
+function testServiceErrorTimeout(logger as Logger) as Boolean {
+    return Check.eq(logger, "-300", ServiceError.fromResponseCode(Communications.NETWORK_REQUEST_TIMED_OUT), ServiceError.TIMEOUT)
+        && Check.eq(logger, "msg timeout", ServiceError.message(ServiceError.TIMEOUT, -300), "Ingen svar");
+}
