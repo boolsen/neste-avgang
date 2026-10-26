@@ -1,5 +1,6 @@
 import Toybox.Lang;
 import Toybox.Position;
+import Toybox.Time;
 import Toybox.Timer;
 import Toybox.WatchUi;
 
@@ -7,7 +8,9 @@ import Toybox.WatchUi;
 // Occupies one view-stack slot above DeparturesView; steps replace each other with switchToView.
 // Back from any step returns to DeparturesView.
 class AddFavoriteFlow {
-    const GPS_TIMEOUT_MS = 30000;
+    const GPS_TIMEOUT_MS = 15000;
+    // The stop search covers 500 m, so a rough fix is enough: reuse a recent one, else take the first usable one.
+    const RECENT_FIX_S = 120;
 
     hidden var _provider;
     hidden var _onSaved as Method;
@@ -41,21 +44,25 @@ class AddFavoriteFlow {
     }
 
     function requestPosition() as Void {
+        var last = Position.getInfo();
+        if (last.position != null && last.accuracy != Position.QUALITY_NOT_AVAILABLE && last.when != null
+                && Time.now().subtract(last.when as Time.Moment).value() <= RECENT_FIX_S) {
+            searchNear(last.position as Position.Location);
+            return;
+        }
         showStatus(Fmt.str(Rez.Strings.FindingPosition));
         _timer.stop();
         _timer.start(method(:onPositionTimeout), GPS_TIMEOUT_MS, false);
-        Position.enableLocationEvents(Position.LOCATION_ONE_SHOT, method(:onPosition));
+        Position.enableLocationEvents(Position.LOCATION_CONTINUOUS, method(:onPosition));
     }
 
+    // Continuous updates: keep waiting until a live fix arrives (or the timeout falls back to the last known one).
     function onPosition(info as Position.Info) as Void {
-        if (_cancelled) {
+        if (_cancelled || info.position == null || info.accuracy < Position.QUALITY_POOR) {
             return;
         }
         _timer.stop();
-        if (info.position == null) {
-            onPositionTimeout();
-            return;
-        }
+        Position.enableLocationEvents(Position.LOCATION_DISABLE, null);
         searchNear(info.position as Position.Location);
     }
 
